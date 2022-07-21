@@ -3,7 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "./components/HomePage";
 import LoginPage from "./components/LoginPage";
 import MuscleLevels from "./components/MuscleLevels";
-import TrainModules from "./components/TrainModules";
+import ModulesListing from "./components/ModulesListing";
+
 function App() {
   return (
     <div className="app" id="main_window">
@@ -21,7 +22,7 @@ function App() {
             path="/modules"
             element={
               <div>
-                <TrainModules />
+                <ModulesListing />
               </div>
             }
           ></Route>
