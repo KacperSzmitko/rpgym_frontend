@@ -1,9 +1,8 @@
 import React from "react";
 import { useAppSelector } from "../state/hooks";
 import Listing from "./Listing";
-import { getTrainModules } from "../state/actions/mainActions";
-import TrainModule from "./TrainModule";
-
+import { ActionType } from "../state/action-types/mainTypes";
+import TrainModuleMemo from "./TrainModule";
 export default function ModulesListing() {
   const modulesInfo = useAppSelector((state) => state.main.train_modules_info);
   const modules = useAppSelector((state) =>
@@ -13,9 +12,10 @@ export default function ModulesListing() {
     <div>
       <Listing
         listInfo={modulesInfo}
-        fetchFunction={getTrainModules}
         itemsData={modules}
-        itemComponent={TrainModule}
+        itemComponent={TrainModuleMemo}
+        action={ActionType.GET_NEXT_TRAIN_MODULES}
+        path="app/train_module/"
       />
     </div>
   );

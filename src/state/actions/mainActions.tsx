@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import axios, { Axios } from "axios";
 import { BASE_API_URL } from "../../constans";
-import { Action, ActionType } from "../action-types/mainTypes";
+import { Action, ActionType, ListingInfo } from "../action-types/mainTypes";
 import { RootState } from "../store";
 
 export const getMuscleLevels = () => (dispach: Dispatch<Action>) => {
@@ -13,8 +13,11 @@ export const getMuscleLevels = () => (dispach: Dispatch<Action>) => {
     .catch((err) => console.log(err));
 };
 
-export const getTrainModules =
+export const getNextListItems =
   (
+    action: ActionType,
+    path: string,
+    redux_info_obj: ListingInfo,
     init = false,
     page_url: string | null = "",
     page_size: number | null = null
@@ -24,7 +27,7 @@ export const getTrainModules =
     if (page_size === null) {
       page_size = getState().main.train_modules_info.items_per_page;
     }
-    let url: any = BASE_API_URL + "app/train_module/";
+    let url: any = BASE_API_URL + path;
     if (!init && url !== null) {
       url = page_url;
     }
@@ -32,7 +35,7 @@ export const getTrainModules =
       .get(url, { params: { page_size: page_size } })
       .then((response) => {
         dispach({
-          type: ActionType.GET_NEXT_TRAIN_MODULES,
+          type: action,
           payload: response.data,
         });
         return response.status;
@@ -41,15 +44,15 @@ export const getTrainModules =
     if (
       init &&
       status === 200 &&
-      getState().main.train_modules_info.next !== null
+      redux_info_obj.next !== null
     ) {
       status = await axios
-        .get(getState().main.train_modules_info.next, {
+        .get(redux_info_obj.next, {
           params: { page_size: page_size },
         })
         .then((response) => {
           dispach({
-            type: ActionType.GET_NEXT_TRAIN_MODULES,
+            type: action,
             payload: response.data,
           });
           return response.status;
@@ -59,7 +62,7 @@ export const getTrainModules =
     return status;
   };
 
-export const deleteTrainModule =
+export const deleteListItem =
   (id: number) =>
   async (dispach: Dispatch<Action>, getState: () => RootState) => {
     const module_info = getState().main.train_modules_info;

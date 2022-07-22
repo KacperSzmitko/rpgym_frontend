@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../state/hooks";
-import { ListingInfo, TrainModuleType } from "../state/action-types/mainTypes";
+import { ListingInfo, TrainModuleType, ActionType } from "../state/action-types/mainTypes";
 import { Action } from "../state/action-types/mainTypes";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../state/store";
+import { getNextListItems } from "../state/actions/mainActions";
+
 
 type fetchFunction = (
+  action: ActionType,
+  path: string,
+  redux_info_obj: ListingInfo,
   init?: boolean,
   page_url?: string | null,
   page_size?: number | null
 ) => ThunkAction<number| any, RootState, unknown, Action>;
 
 interface PropsType<T> {
-  fetchFunction: fetchFunction;
   listInfo: ListingInfo;
   itemsData: TrainModuleType[];
   itemComponent: React.ComponentType<T> | React.ElementType;
+  action: ActionType;
+  path: string;
 }
 
 export default function Listing<T>(props: PropsType<T>) {
@@ -28,7 +34,9 @@ export default function Listing<T>(props: PropsType<T>) {
 
   useEffect(() => {
     if (currentPage === 0) {
-      dispach(props.fetchFunction(true));
+      dispach(
+        getNextListItems(props.action, props.path, props.listInfo, true)
+      );
     }
   }, []);
 
@@ -39,7 +47,15 @@ export default function Listing<T>(props: PropsType<T>) {
     }
     // Always try to fetch one page ahead
     else if(props.listInfo.last_cached_page === currentPage && props.listInfo.next !== null && currentPage !== 0){
-      dispach(props.fetchFunction(false, props.listInfo.next));
+      dispach(
+        getNextListItems(
+          props.action,
+          props.path,
+          props.listInfo,
+          false,
+          props.listInfo.next
+        )
+      );
     }
   }, [items]);
 
@@ -50,7 +66,13 @@ export default function Listing<T>(props: PropsType<T>) {
     ) {
       // Fetch next page
       const status = await dispach(
-        props.fetchFunction(false, props.listInfo.next)
+        getNextListItems(
+          props.action,
+          props.path,
+          props.listInfo,
+          false,
+          props.listInfo.next
+        )
       );
       if (status === 200) {
         setCurrentPage(currentPage + 1);

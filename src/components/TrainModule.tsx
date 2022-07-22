@@ -1,12 +1,12 @@
 import React from 'react'
 import { TrainModuleType } from '../state/action-types/mainTypes';
-import { deleteTrainModule } from '../state/actions/mainActions';
+import { deleteListItem } from "../state/actions/mainActions";
 import { useAppDispatch } from "../state/hooks";
 export type PropsType = {
   data: TrainModuleType;
 };
 
-export default function TrainModule(props: PropsType) {
+export function TrainModule(props: PropsType) {
   const dispach = useAppDispatch();
   return (
     <div id={`train_module_`}>
@@ -19,9 +19,12 @@ export default function TrainModule(props: PropsType) {
       {props.data.reps}
       {props.data.series}
       {props.data.weight}
-      <button onClick={() => dispach(deleteTrainModule(props.data.id))}>
+      <button onClick={() => dispach(deleteListItem(props.data.id))}>
         Usuń
       </button>
     </div>
   );
 }
+
+const TrainModuleMemo = React.memo(TrainModule);
+export default TrainModuleMemo;
