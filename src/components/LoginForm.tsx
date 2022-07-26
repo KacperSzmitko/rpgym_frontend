@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useCookies } from "react-cookie";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { login } from "../state/actions/authActions";
 import { useAppDispatch } from "../state/hooks";
 

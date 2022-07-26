@@ -1,5 +1,5 @@
 import { Dispatch } from "redux";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { BASE_API_URL } from "../../constans";
 import { Action, ActionType, ListingInfo } from "../action-types/mainTypes";
 import { RootState } from "../store";
@@ -22,32 +22,28 @@ export const getNextListItems =
     page_url: string | null = "",
     page_size: number | null = null
   ) =>
-  async (dispach: Dispatch<Action>, getState: () => RootState) => {
+  async (dispach: Dispatch<Action>) => {
     // If init is set TWO pages will be fetched
     if (page_size === null) {
-      page_size = getState().main.train_modules_info.items_per_page;
+      page_size = redux_info_obj.items_per_page;
     }
     let url: any = BASE_API_URL + path;
     if (!init && url !== null) {
       url = page_url;
     }
-    let status = await axios
+    let response = await axios
       .get(url, { params: { page_size: page_size } })
       .then((response) => {
         dispach({
           type: action,
           payload: response.data,
         });
-        return response.status;
+        return { status: response.status, next: response.data.next };
       })
       .catch((err) => err.response.status);
-    if (
-      init &&
-      status === 200 &&
-      redux_info_obj.next !== null
-    ) {
-      status = await axios
-        .get(redux_info_obj.next, {
+    if (init && response.status === 200 && response.next !== null) {
+      response = await axios
+        .get(response.next, {
           params: { page_size: page_size },
         })
         .then((response) => {
@@ -55,42 +51,88 @@ export const getNextListItems =
             type: action,
             payload: response.data,
           });
-          return response.status;
+          return { status: response.status };
         })
         .catch((err) => err.response.status);
     }
-    return status;
+    return response.status;
   };
 
 export const deleteListItem =
-  (id: number) =>
-  async (dispach: Dispatch<Action>, getState: () => RootState) => {
-    const module_info = getState().main.train_modules_info;
+  (
+    delete_action: ActionType,
+    update_cache_action: ActionType,
+    set_next_page_action: ActionType,
+    path: string,
+    next: string,
+    id: number
+  ) =>
+  async (dispach: Dispatch<Action>) => {
     let nextOnServer = null;
-    if (module_info.next !== null){
-    nextOnServer = axios
-      .get(module_info.next)
-      .then((response) => {
-        return response.data.results[0];
-      })
-      .catch((err) => {        dispach({
-        type: ActionType.SET_NEXT_MODULE_PAGE,
-        payload: null,
-      });});
+    if (next !== null) {
+      nextOnServer = axios
+        .get(next)
+        .then((response) => {
+          return response.data.results[0];
+        })
+        .catch((err) => {
+          dispach({
+            type: set_next_page_action,
+            payload: null,
+          });
+        });
     }
     let status = await axios
-      .delete(BASE_API_URL + `app/train_module/${id}/`)
+      .delete(BASE_API_URL + `${path}/${id}/`)
       .then((response) => {
-        dispach({ type: ActionType.DELETE_TRAIN_MODULE, payload: id });
+        dispach({ type: delete_action, payload: id });
         return response.status;
       })
       .catch((err) => console.log(err));
     if (status === 204 && nextOnServer !== null) {
       const itemToAdd = await nextOnServer;
       dispach({
-        type: ActionType.UPDATE_MODULES_CACHE,
+        type: update_cache_action,
         payload: itemToAdd,
       });
-      // Update cache
     }
   };
+
+export const createListItem =
+  (path: string, action: ActionType, data: any) =>
+  (dispach: Dispatch<Action>) => {
+    axios
+      .post(BASE_API_URL + path, data)
+      .then((response) => {
+        dispach({ type: action, payload: response.data });
+      })
+      .catch((err) => console.log(err));
+  };
+
+export const getExercises = () => (dispach: Dispatch<Action>) => {
+  axios
+    .get(BASE_API_URL + "app/exercises/")
+    .then((response) => {
+      dispach({ type: ActionType.GET_EXERCISES, payload: response.data });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const getMuscleParts = () => (dispach: Dispatch<Action>) => {
+  axios
+    .get(BASE_API_URL + "app/muscle_parts/")
+    .then((response) => {
+      dispach({ type: ActionType.GET_MUSCLE_PARTS, payload: response.data });
+    })
+    .catch((err) => console.log(err));
+};
+
+
+export const getAllModules = () => (dispach: Dispatch<Action>) => {
+  axios.
+    get(BASE_API_URL + 'app/train_module/all/')
+    .then(response => {
+      dispach({ type: ActionType.GET_ALL_MODULES, payload: response.data });
+    })
+    .catch((err) => console.log(err));
+}

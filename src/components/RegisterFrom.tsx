@@ -10,7 +10,7 @@ export default function RegisterFrom() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (password != rePassword){
+    if (password !== rePassword){
         console.log("Hasła nie są identyczne");
         return;
     }

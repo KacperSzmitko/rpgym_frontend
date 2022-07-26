@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../state/hooks";
-import { ListingInfo, TrainModuleType, ActionType } from "../state/action-types/mainTypes";
-import { Action } from "../state/action-types/mainTypes";
-import { ThunkAction } from "redux-thunk";
-import { RootState } from "../state/store";
+import { ListingInfo, TrainModuleType,PlanType,  ActionType } from "../state/action-types/mainTypes";
 import { getNextListItems } from "../state/actions/mainActions";
-
-
-type fetchFunction = (
-  action: ActionType,
-  path: string,
-  redux_info_obj: ListingInfo,
-  init?: boolean,
-  page_url?: string | null,
-  page_size?: number | null
-) => ThunkAction<number| any, RootState, unknown, Action>;
 
 interface PropsType<T> {
   listInfo: ListingInfo;
-  itemsData: TrainModuleType[];
+  itemsData: TrainModuleType[] | PlanType[];
   itemComponent: React.ComponentType<T> | React.ElementType;
-  action: ActionType;
+  fetchAction: ActionType;
   path: string;
 }
 
@@ -33,9 +20,10 @@ export default function Listing<T>(props: PropsType<T>) {
   );
 
   useEffect(() => {
-    if (currentPage === 0) {
+    // On mount fetch two pages
+    if (currentPage === 0 && props.listInfo.count === -1) {
       dispach(
-        getNextListItems(props.action, props.path, props.listInfo, true)
+        getNextListItems(props.fetchAction, props.path, props.listInfo, true)
       );
     }
   }, []);
@@ -49,7 +37,7 @@ export default function Listing<T>(props: PropsType<T>) {
     else if(props.listInfo.last_cached_page === currentPage && props.listInfo.next !== null && currentPage !== 0){
       dispach(
         getNextListItems(
-          props.action,
+          props.fetchAction,
           props.path,
           props.listInfo,
           false,
@@ -67,7 +55,7 @@ export default function Listing<T>(props: PropsType<T>) {
       // Fetch next page
       const status = await dispach(
         getNextListItems(
-          props.action,
+          props.fetchAction,
           props.path,
           props.listInfo,
           false,
@@ -93,8 +81,8 @@ export default function Listing<T>(props: PropsType<T>) {
         ) : null}
       </div>
       <div>
-        {items.map((module: TrainModuleType, index: number) => (
-          <props.itemComponent data={module} key={index} />
+        {items.map((module, index: number) => (
+          <props.itemComponent data={module} next={props.listInfo.next} key={index} />
         ))}
       </div>
       <div>

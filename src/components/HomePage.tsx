@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { refresh_cookie_token, logout } from "../state/actions/authActions";
 import { Outlet } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAppDispatch } from "../state/hooks";
+import { getMuscleParts, getExercises } from "../state/actions/mainActions";
+import { Link } from "react-router-dom";
 
 interface CustomizedState {
   tokenStatus: number;
@@ -11,6 +14,7 @@ export default function HomePage() {
   const location = useLocation();
   const [tokenStatus, setTokenStatus] = useState(0);
   const navigate = useNavigate();
+  const dispach = useAppDispatch();
 
   useEffect(() => {
 
@@ -26,7 +30,11 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (tokenStatus === 401) {
+    if (tokenStatus === 200){
+      dispach(getMuscleParts());
+      dispach(getExercises());
+    }
+    else if (tokenStatus === 401) {
       navigate("/login", { state: { tokenStatus: tokenStatus } });
     }
   }, [tokenStatus]);
@@ -43,7 +51,13 @@ export default function HomePage() {
       <div>
         Zalogowano
         <button onClick={logOut}>Wyloguj</button>
-        <Outlet/>
+        <br />
+        <Link to="/modules">Moduły</Link> <br />
+        <Link to="">Strona główna</Link>
+        <br />
+        <Link to="/plans">Plany</Link>
+        <br />
+        <Outlet />
       </div>
     );
   }

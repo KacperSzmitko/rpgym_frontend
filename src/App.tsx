@@ -4,6 +4,8 @@ import HomePage from "./components/HomePage";
 import LoginPage from "./components/LoginPage";
 import MuscleLevels from "./components/MuscleLevels";
 import ModulesListing from "./components/ModulesListing";
+import PlansListing from "./components/PlansListing";
+
 
 function App() {
   return (
@@ -23,6 +25,14 @@ function App() {
             element={
               <div>
                 <ModulesListing />
+              </div>
+            }
+          ></Route>
+          <Route
+            path="/plans"
+            element={
+              <div>
+                <PlansListing />
               </div>
             }
           ></Route>
