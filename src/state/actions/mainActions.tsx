@@ -1,7 +1,7 @@
 import { Dispatch } from "redux";
 import axios from "axios";
 import { BASE_API_URL } from "../../constans";
-import { Action, ActionType, ListingInfo } from "../action-types/mainTypes";
+import { Action, ActionType, ListingInfo, TrainModuleType } from "../action-types/mainTypes";
 import { RootState } from "../store";
 
 export const getMuscleLevels = () => (dispach: Dispatch<Action>) => {
@@ -130,7 +130,7 @@ export const getMuscleParts = () => (dispach: Dispatch<Action>) => {
 
 export const getAllModules = () => (dispach: Dispatch<Action>) => {
   axios.
-    get(BASE_API_URL + 'app/train_module/all/')
+    get<TrainModuleType[]>(BASE_API_URL + 'app/train_module/all/')
     .then(response => {
       dispach({ type: ActionType.GET_ALL_MODULES, payload: response.data });
     })

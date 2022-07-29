@@ -17,7 +17,7 @@ export default function CreateTrainModule() {
   const [series, setSeries] = useState(0);
   const [weight, setWeight] = useState(0);
   const [levelWeightInc, setLevelWeightInc] = useState(0.0);
-  const [reps, setreps] = useState<Number[]>([]);
+  const [reps, setReps] = useState<Number[]>([]);
 
   function createModule(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -108,7 +108,7 @@ export default function CreateTrainModule() {
             name="reps"
             id=""
             onChange={(e) =>
-              setreps(e.target.value.split(",").map((rep) => Number(rep)))
+              setReps(e.target.value.split(",").map((rep) => Number(rep)))
             }
           />
         </div>

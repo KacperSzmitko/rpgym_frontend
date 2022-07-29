@@ -17,7 +17,6 @@ export default function HomePage() {
   const dispach = useAppDispatch();
 
   useEffect(() => {
-
     // State is set if there was a redirection
     let state = location.state as CustomizedState;
     if (state) {
@@ -30,11 +29,10 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (tokenStatus === 200){
+    if (tokenStatus === 200) {
       dispach(getMuscleParts());
       dispach(getExercises());
-    }
-    else if (tokenStatus === 401) {
+    } else if (tokenStatus === 401) {
       navigate("/login", { state: { tokenStatus: tokenStatus } });
     }
   }, [tokenStatus]);
@@ -52,11 +50,9 @@ export default function HomePage() {
         Zalogowano
         <button onClick={logOut}>Wyloguj</button>
         <br />
+        <Link to="">Strona główna</Link> <br />
         <Link to="/modules">Moduły</Link> <br />
-        <Link to="">Strona główna</Link>
-        <br />
-        <Link to="/plans">Plany</Link>
-        <br />
+        <Link to="/plans">Plany</Link> <br />
         <Outlet />
       </div>
     );
