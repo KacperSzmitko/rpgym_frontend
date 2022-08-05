@@ -1,5 +1,5 @@
 import React from 'react'
-import { MuscleLevelType } from '../state/action-types/mainTypes';
+import { MuscleLevelType } from './muscleLevelsSlice';
 
 export type PropsType = {
   muscle: MuscleLevelType;

@@ -1,10 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import HomePage from "./components/HomePage";
-import LoginPage from "./components/LoginPage";
-import MuscleLevels from "./components/MuscleLevels";
-import ModulesListing from "./components/ModulesListing";
-import PlansListing from "./components/PlansListing";
+import HomePage from "../common/HomePage";
+import LoginPage from "../features/auth/LoginPage";
+import MuscleLevels from "../features/muscleLevels/MuscleLevels";
+import ModulesListing from "../features/trainModules/ModulesListing";
+import PlansListing from "../features/plans/PlansListing";
 
 
 function App() {

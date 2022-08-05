@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { register } from "../state/actions/authActions";
-import { useAppDispatch } from "../state/hooks";
+import { register } from "./authActions";
+import { useAppDispatch } from "../../common/hooks";
 
 export default function RegisterFrom() {
   const [email, setEmail] = useState("");

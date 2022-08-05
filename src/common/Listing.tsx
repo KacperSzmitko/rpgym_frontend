@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../state/hooks";
-import { ListingInfo, TrainModuleType,PlanType,  ActionType } from "../state/action-types/mainTypes";
-import { getNextListItems } from "../state/actions/mainActions";
+import { useAppDispatch } from "./hooks";
+import { PlanType } from "../features/plans/planSlice";
+import { TrainModuleType } from "../features/trainModules/trainModuleSlice";
+import { ListingInfo } from "./types";
+import {getNextListItems} from "./actions"
 
 interface PropsType<T> {
   listInfo: ListingInfo;
   itemsData: TrainModuleType[] | PlanType[];
   itemComponent: React.ComponentType<T> | React.ElementType;
-  fetchAction: ActionType;
+  fetchAction: any;
   path: string;
 }
 

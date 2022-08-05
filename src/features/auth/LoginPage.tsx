@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import RegisterFrom from "./RegisterFrom";
 import { useLocation, useNavigate } from "react-router-dom";
-import { refresh_cookie_token } from "../state/actions/authActions";
+import { refresh_cookie_token } from "./authActions";
 
 interface CustomizedState {
   tokenStatus: number;

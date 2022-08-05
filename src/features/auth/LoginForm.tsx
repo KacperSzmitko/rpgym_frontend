@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../state/actions/authActions";
-import { useAppDispatch } from "../state/hooks";
+import { login } from "./authActions";
+import { useAppDispatch } from "../../common/hooks";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("kacper@wp.pl");

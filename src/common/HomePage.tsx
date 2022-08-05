@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { refresh_cookie_token, logout } from "../state/actions/authActions";
+import { refresh_cookie_token, logout } from "../features/auth/authActions";
 import { Outlet } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAppDispatch } from "../state/hooks";
-import { getMuscleParts, getExercises } from "../state/actions/mainActions";
+import { useAppDispatch } from "./hooks";
+import { getExercises } from "../features/exercises/actions";
+import { getMuscleParts } from "../features/muscleParts/actions";
 import { Link } from "react-router-dom";
 
 interface CustomizedState {

@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { getMuscleLevels } from "../state/actions/mainActions";
+import { useAppDispatch, useAppSelector } from "../../common/hooks";
+import { getMuscleLevels } from "./actions";
 import MuscleLevel from "./MuscleLevel";
-import { MuscleLevelType } from "../state/action-types/mainTypes";
+import { MuscleLevelType } from "./muscleLevelsSlice";
 
 export default function MuscleLevels() {
   const dispach = useAppDispatch();
-  const muscleLevels = useAppSelector((state) => state.main.muscles_levels);
+  const muscleLevels = useAppSelector((state) => state.muscleLevelsSlice.muscles_levels);
 
   useEffect(() => {
     if (muscleLevels.length === 0) {

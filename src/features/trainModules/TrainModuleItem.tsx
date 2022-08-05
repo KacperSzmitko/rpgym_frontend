@@ -1,7 +1,12 @@
 import React from "react";
-import { ActionType, TrainModuleType } from "../state/action-types/mainTypes";
-import { deleteListItem } from "../state/actions/mainActions";
-import { useAppDispatch } from "../state/hooks";
+import { useAppDispatch } from "../../common/hooks";
+import {
+  nextModulePageSet,
+  moduleDeleted,
+  moduleCacheUpdated,
+  TrainModuleType,
+} from "./trainModuleSlice";
+import { deleteListItem } from "../../common/actions";
 
 export type PropsType = {
   data: TrainModuleType;
@@ -25,9 +30,9 @@ export function TrainModule({ data, next }: PropsType) {
         onClick={() =>
           dispach(
             deleteListItem(
-              ActionType.DELETE_TRAIN_MODULE,
-              ActionType.UPDATE_MODULES_CACHE,
-              ActionType.UPDATE_MODULES_PAGE,
+              moduleDeleted,
+              moduleCacheUpdated,
+              nextModulePageSet,
               "app/train_module",
               next,
               data.id

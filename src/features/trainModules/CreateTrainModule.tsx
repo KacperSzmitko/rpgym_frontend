@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { ExcerciseType, MusclePartType } from "../state/action-types/mainTypes";
-import { createListItem } from "../state/actions/mainActions";
-import { ActionType } from "../state/action-types/mainTypes";
+import { useAppDispatch, useAppSelector } from "../../common/hooks";
+import { ExcerciseType } from "../exercises/exercisesSlice";
+import { MusclePartType } from "../muscleParts/musclePartsSlice";
+import { createListItem } from "../../common/actions";
+import { moduleCreated } from "./trainModuleSlice";
 
 export default function CreateTrainModule() {
   const dispach = useAppDispatch();
-  const muscles_parts = useAppSelector((state) => state.main.muscles_parts);
+  const muscles_parts = useAppSelector((state) => state.musclePartsSlice.muscles_parts);
   const [selectedMuscle, setSelectedMuscle] = useState(0);
   const exercises = useAppSelector((state) =>
-    state.main.exercises.filter((exercise: ExcerciseType) => exercise.muscle_part === selectedMuscle
+    state.exercisesSlice.exercises.filter((exercise: ExcerciseType) => exercise.muscle_part === selectedMuscle
     )
   );
   const [selectedExercise, setSelectedExercise] = useState(0);
@@ -22,7 +23,7 @@ export default function CreateTrainModule() {
   function createModule(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     dispach(
-      createListItem("app/train_module/", ActionType.CREATE_MODULE, {
+      createListItem("app/train_module/", moduleCreated, {
         name: name,
         exercise: selectedExercise,
         series: series,

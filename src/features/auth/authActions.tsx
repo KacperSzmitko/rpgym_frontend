@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_API_URL } from "../../constans";
+import { BASE_API_URL } from "../../common/constans";
 
 
 export const login = (email: string, password: string) => async () => {

@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
-import {
-  ActionType,
-  PlanType,
-  TrainModuleType,
-} from "../state/action-types/mainTypes";
-import { deleteListItem } from "../state/actions/mainActions";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { PlanType } from "./planSlice";
+import { TrainModuleType } from "../trainModules/trainModuleSlice";
+import { planDeleted, planCacheUpdated, nextPlanPageSet } from "./planSlice";
+import { useAppDispatch, useAppSelector } from "../../common/hooks";
+import { deleteListItem } from "../../common/actions";
 
 export type PropsType = {
   data: PlanType;
@@ -26,9 +24,9 @@ export function PlanItem({ data, next }: PropsType) {
         onClick={() =>
           dispach(
             deleteListItem(
-              ActionType.DELETE_PLAN,
-              ActionType.UPDATE_PLAN_CACHE,
-              ActionType.UPDATE_PLAN_PAGE,
+              planDeleted,
+              planCacheUpdated,
+              nextPlanPageSet,
               "app/plan",
               next,
               data.id
