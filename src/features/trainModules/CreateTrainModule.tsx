@@ -7,10 +7,13 @@ import { moduleCreated } from "./trainModuleSlice";
 
 export default function CreateTrainModule() {
   const dispach = useAppDispatch();
-  const muscles_parts = useAppSelector((state) => state.musclePartsSlice.muscles_parts);
+  const musclesParts = useAppSelector(
+    (state) => state.musclePartsSlice.muscles_parts
+  );
   const [selectedMuscle, setSelectedMuscle] = useState(0);
   const exercises = useAppSelector((state) =>
-    state.exercisesSlice.exercises.filter((exercise: ExcerciseType) => exercise.muscle_part === selectedMuscle
+    state.exercisesSlice.exercises.filter(
+      (exercise: ExcerciseType) => exercise.muscle_part === selectedMuscle
     )
   );
   const [selectedExercise, setSelectedExercise] = useState(0);
@@ -20,8 +23,27 @@ export default function CreateTrainModule() {
   const [levelWeightInc, setLevelWeightInc] = useState(0.0);
   const [reps, setReps] = useState<Number[]>([]);
 
+  function parseReps(e: React.ChangeEvent<HTMLInputElement>) {
+    setReps(e.target.value.split(",").map((rep) => Number(rep)));
+  }
+
   function createModule(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (name === "") {
+      return;
+    }
+    if (series === 0) {
+      return;
+    }
+    if (weight === 0) {
+      return;
+    }
+    if (levelWeightInc === 0) {
+      return;
+    }
+    if (reps.length === 0) {
+      return;
+    }
     dispach(
       createListItem("app/train_module/", moduleCreated, {
         name: name,
@@ -44,7 +66,7 @@ export default function CreateTrainModule() {
             onChange={(e) => setSelectedMuscle(Number(e.target.value))}
           >
             <option value={0}></option>
-            {muscles_parts.map((muscle: MusclePartType, index: number) => (
+            {musclesParts.map((muscle: MusclePartType, index: number) => (
               <option key={index} value={muscle.id}>
                 {muscle.name}
               </option>
@@ -104,14 +126,7 @@ export default function CreateTrainModule() {
         </div>
         <div>
           Powtórzenia
-          <input
-            type="text"
-            name="reps"
-            id=""
-            onChange={(e) =>
-              setReps(e.target.value.split(",").map((rep) => Number(rep)))
-            }
-          />
+          <input type="text" name="reps" id="" onChange={(e) => parseReps(e)} />
         </div>
         <input type="submit" value="Stwórz moduł" />
       </form>

@@ -4,7 +4,7 @@ import { ListingInfo } from "../../common/types";
 
 export interface TrainModuleType {
   id: number;
-  exercise: string;
+  exercise: number;
   name: string;
   series: number;
   weight: number;
@@ -35,7 +35,7 @@ const initialState = {
   },
 } as TrainModulesType;
 
-const counterSlice = createSlice({
+const trainModuleSlice = createSlice({
   name: "trainModules",
   initialState,
   reducers: {
@@ -105,5 +105,5 @@ export const {
   moduleDeleted,
   moduleCacheUpdated,
   nextModulePageSet,
-} = counterSlice.actions;
-export default counterSlice.reducer;
+} = trainModuleSlice.actions;
+export default trainModuleSlice.reducer;

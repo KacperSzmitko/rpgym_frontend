@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppDispatch } from "../../common/hooks";
+import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import {
   nextModulePageSet,
   moduleDeleted,
@@ -15,11 +15,13 @@ export type PropsType = {
 
 export function TrainModule({ data, next }: PropsType) {
   const dispach = useAppDispatch();
+  const exercise = useAppSelector((state) => state.exercisesSlice.exercises.find((exercise) => exercise.id === Number(data.exercise)));
+  const musclePart = useAppSelector((state) => state.musclePartsSlice.muscles_parts.find((musclePart) => musclePart.id == exercise?.muscle_part));
   return (
     <div id={`train_module_`}>
       {data.name} {"  "}
       {data.current_level}
-      {data.exercise}
+      {musclePart?.name}
       {data.level_weight_increase}
       {data.name}
       {data.progress}
