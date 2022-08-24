@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "../common/HomePage";
 import LoginPage from "../features/auth/LoginPage";
 import MuscleLevels from "../features/muscleLevels/MuscleLevels";
-import ModulesListing from "../features/trainModules/ModulesListing";
-import PlansListing from "../features/plans/PlansListing";
+import ModulesListing from "../features/trainModules/ModulesPage";
+import PlansListing from "../features/plans/PlansPage";
 
 
 function App() {

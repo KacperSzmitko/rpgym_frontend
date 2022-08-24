@@ -5,6 +5,7 @@ import { ListingInfo } from "../../common/types";
 export interface TrainModuleType {
   id: number;
   exercise: number;
+  muscle_part_id: number;
   name: string;
   series: number;
   weight: number;
@@ -23,6 +24,8 @@ export interface TrainModulesListing {
 export interface TrainModulesType {
   train_modules: TrainModuleType[];
   train_modules_info: ListingInfo;
+  editing_module_id: number;
+  module_creation_active: boolean;
 }
 
 const initialState = {
@@ -33,6 +36,8 @@ const initialState = {
     last_cached_page: -1,
     count: -1,
   },
+  editing_module_id: 0,
+  module_creation_active: false,
 } as TrainModulesType;
 
 const trainModuleSlice = createSlice({
@@ -50,6 +55,7 @@ const trainModuleSlice = createSlice({
           action.payload.length / state.train_modules_info.items_per_page
         ).toFixed(0)
       );
+      state.train_modules_info.next = null;
     },
     moduleCreated(
       state: TrainModulesType,
@@ -79,21 +85,43 @@ const trainModuleSlice = createSlice({
       state.train_modules = state.train_modules.filter(
         (val) => val.id !== action.payload
       );
-      state.train_modules_info.count -= 1
+      state.train_modules_info.count -= 1;
     },
     moduleCacheUpdated(
       state: TrainModulesType,
       action: PayloadAction<TrainModuleType>
     ) {
-      state.train_modules = typeof action.payload === "undefined"
-            ? state.train_modules
-            : [...state.train_modules, action.payload]
+      state.train_modules =
+        typeof action.payload === "undefined"
+          ? state.train_modules
+          : [...state.train_modules, action.payload];
     },
-    nextModulePageSet(
+    nextModulePageSet(state: TrainModulesType, action: PayloadAction<string>) {
+      state.train_modules_info.next = action.payload;
+    },
+    moduleEdited(
       state: TrainModulesType,
-      action: PayloadAction<string>
+      action: PayloadAction<TrainModuleType>
     ) {
-      state.train_modules_info.next = action.payload
+      const updatedModuleIndex = state.train_modules.findIndex(
+        (module) => module.id === action.payload.id
+      );
+      if (updatedModuleIndex !== -1){
+        state.train_modules[updatedModuleIndex] = action.payload;
+      }
+      state.editing_module_id = 0;
+    },
+    moduleCreationStatusChanged(
+      state: TrainModulesType,
+      action: PayloadAction<boolean>
+    ) {
+      state.module_creation_active = action.payload;
+    },
+    moduleEditionStatusChanged(
+      state: TrainModulesType,
+      action: PayloadAction<number>
+    ) {
+      state.editing_module_id = action.payload;
     },
   },
 });
@@ -105,5 +133,8 @@ export const {
   moduleDeleted,
   moduleCacheUpdated,
   nextModulePageSet,
+  moduleEdited,
+  moduleCreationStatusChanged,
+  moduleEditionStatusChanged,
 } = trainModuleSlice.actions;
 export default trainModuleSlice.reducer;

@@ -85,3 +85,14 @@ export const createListItem =
       })
       .catch((err) => console.log(err));
   };
+
+
+export const updateListItem =
+  (path: string, action: any, data: any) => (dispach: Dispatch) => {
+    axios
+      .put(BASE_API_URL + path, data)
+      .then((response) => {
+        dispach(action(response.data));
+      })
+      .catch((err) => console.log(err));
+  };

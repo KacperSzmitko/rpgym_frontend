@@ -5,6 +5,7 @@ import {
   moduleDeleted,
   moduleCacheUpdated,
   TrainModuleType,
+  moduleEditionStatusChanged,
 } from "./trainModuleSlice";
 import { deleteListItem } from "../../common/actions";
 
@@ -16,7 +17,7 @@ export type PropsType = {
 export function TrainModule({ data, next }: PropsType) {
   const dispach = useAppDispatch();
   const exercise = useAppSelector((state) => state.exercisesSlice.exercises.find((exercise) => exercise.id === Number(data.exercise)));
-  const musclePart = useAppSelector((state) => state.musclePartsSlice.muscles_parts.find((musclePart) => musclePart.id == exercise?.muscle_part));
+  const musclePart = useAppSelector((state) => state.musclePartsSlice.muscles_parts.find((musclePart) => musclePart.id === exercise?.muscle_part));
   return (
     <div id={`train_module_`}>
       {data.name} {"  "}
@@ -43,6 +44,9 @@ export function TrainModule({ data, next }: PropsType) {
         }
       >
         Usuń
+      </button>
+      <button onClick={() => dispach(moduleEditionStatusChanged(data.id))}>
+        Edytuj
       </button>
     </div>
   );

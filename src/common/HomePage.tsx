@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAppDispatch } from "./hooks";
 import { getExercises } from "../features/exercises/actions";
 import { getMuscleParts } from "../features/muscleParts/actions";
+import { getUserInfo } from "../features/userInfo/actions";
 import { Link } from "react-router-dom";
 
 interface CustomizedState {
@@ -33,6 +34,7 @@ export default function HomePage() {
     if (tokenStatus === 200) {
       dispach(getMuscleParts());
       dispach(getExercises());
+      dispach(getUserInfo());
     } else if (tokenStatus === 401) {
       navigate("/login", { state: { tokenStatus: tokenStatus } });
     }

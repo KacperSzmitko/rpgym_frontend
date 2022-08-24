@@ -19,6 +19,8 @@ export interface PlanListing {
 export interface PlansType {
   plans: PlanType[];
   plans_info: ListingInfo;
+  editing_plan_id: number;
+  plan_creation_active: boolean;
 }
 
 const initialState = {
@@ -29,6 +31,8 @@ const initialState = {
     last_cached_page: -1,
     count: -1,
   },
+  editing_plan_id: 0,
+  plan_creation_active: false,
 } as PlansType;
 
 const counterSlice = createSlice({
@@ -66,6 +70,18 @@ const counterSlice = createSlice({
     nextPlanPageSet(state: PlansType, action: PayloadAction<string>) {
       state.plans_info.next = action.payload;
     },
+    planCreationStatusChanged(
+      state: PlansType,
+      action: PayloadAction<boolean>
+    ) {
+      state.plan_creation_active = action.payload;
+    },
+    planEditionStatusChanged(
+      state: PlansType,
+      action: PayloadAction<number>
+    ) {
+      state.editing_plan_id = action.payload;
+    },
   },
 });
 
@@ -75,5 +91,7 @@ export const {
   planDeleted,
   planCacheUpdated,
   nextPlanPageSet,
+  planCreationStatusChanged,
+  planEditionStatusChanged,
 } = counterSlice.actions;
 export default counterSlice.reducer;

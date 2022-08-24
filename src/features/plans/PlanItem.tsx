@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
-import { PlanType } from "./planSlice";
+import React from "react";
+import { planEditionStatusChanged, PlanType } from "./planSlice";
 import { TrainModuleType } from "../trainModules/trainModuleSlice";
 import { planDeleted, planCacheUpdated, nextPlanPageSet } from "./planSlice";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
+import { useAppDispatch } from "../../common/hooks";
 import { deleteListItem } from "../../common/actions";
 
 export type PropsType = {
   data: PlanType;
   next: string;
 };
+
 
 export function PlanItem({ data, next }: PropsType) {
   const dispach = useAppDispatch();
@@ -35,6 +36,9 @@ export function PlanItem({ data, next }: PropsType) {
         }
       >
         Usuń
+      </button>
+      <button onClick={() => dispach(planEditionStatusChanged(data.id))}>
+        Edytuj
       </button>
     </div>
   );

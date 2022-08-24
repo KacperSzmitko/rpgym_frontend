@@ -3,20 +3,20 @@ import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { ExcerciseType } from "../exercises/exercisesSlice";
 import { MusclePartType } from "../muscleParts/musclePartsSlice";
 import { createListItem } from "../../common/actions";
-import { moduleCreated } from "./trainModuleSlice";
+import { moduleCreated, moduleCreationStatusChanged } from "./trainModuleSlice";
 
 export default function CreateTrainModule() {
   const dispach = useAppDispatch();
   const musclesParts = useAppSelector(
     (state) => state.musclePartsSlice.muscles_parts
   );
-  const [selectedMuscle, setSelectedMuscle] = useState(0);
+  const [selectedMuscleId, setselectedMuscleId] = useState(0);
   const exercises = useAppSelector((state) =>
     state.exercisesSlice.exercises.filter(
-      (exercise: ExcerciseType) => exercise.muscle_part === selectedMuscle
+      (exercise: ExcerciseType) => exercise.muscle_part === selectedMuscleId
     )
   );
-  const [selectedExercise, setSelectedExercise] = useState(0);
+  const [selectedExerciseId, setselectedExerciseId] = useState(0);
   const [name, setName] = useState("");
   const [series, setSeries] = useState(0);
   const [weight, setWeight] = useState(0);
@@ -47,7 +47,7 @@ export default function CreateTrainModule() {
     dispach(
       createListItem("app/train_module/", moduleCreated, {
         name: name,
-        exercise: selectedExercise,
+        exercise: selectedExerciseId,
         series: series,
         weight: weight,
         level_weight_increase: levelWeightInc,
@@ -63,7 +63,7 @@ export default function CreateTrainModule() {
           <select
             name=""
             id=""
-            onChange={(e) => setSelectedMuscle(Number(e.target.value))}
+            onChange={(e) => setselectedMuscleId(Number(e.target.value))}
           >
             <option value={0}></option>
             {musclesParts.map((muscle: MusclePartType, index: number) => (
@@ -77,8 +77,8 @@ export default function CreateTrainModule() {
           <select
             name=""
             id=""
-            disabled={selectedMuscle === 0}
-            onChange={(e) => setSelectedExercise(Number(e.target.value))}
+            disabled={selectedMuscleId === 0}
+            onChange={(e) => setselectedExerciseId(Number(e.target.value))}
           >
             <option value={0}></option>
             {exercises.map((exercise: ExcerciseType, index: number) => (
@@ -128,8 +128,11 @@ export default function CreateTrainModule() {
           Powtórzenia
           <input type="text" name="reps" id="" onChange={(e) => parseReps(e)} />
         </div>
-        <input type="submit" value="Stwórz moduł" />
+        <input type="submit" value="Zapisz" />
       </form>
+      <button onClick={() => dispach(moduleCreationStatusChanged(false))}>
+        Wyjdź
+      </button>
     </div>
   );
 }

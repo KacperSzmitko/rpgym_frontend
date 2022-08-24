@@ -5,7 +5,8 @@ import CreatePlan from "./CreatePlan";
 import PlanItem from "./PlanItem";
 import { useAppDispatch } from "../../common/hooks";
 import { getAllModules } from "../trainModules/actions";
-import { nextPlansFetched } from "./planSlice";
+import { nextPlansFetched, planCreationStatusChanged } from "./planSlice";
+import EditPlan from "./EditPlan";
 
 export default function PlansListing() {
   const plansInfo = useAppSelector((state) => state.planSlice.plans_info);
@@ -16,6 +17,12 @@ export default function PlansListing() {
   const modulesInfo = useAppSelector(
     (state) => state.trainModuleSlice.train_modules_info
   );
+  const editingActive = useAppSelector(
+    (state) => state.planSlice.editing_plan_id !== 0
+  );
+  const creationActive = useAppSelector(
+    (state) => state.planSlice.plan_creation_active
+  );
   const dispach = useAppDispatch();
 
   useEffect(() => {
@@ -23,10 +30,18 @@ export default function PlansListing() {
       dispach(getAllModules());
     }
   }, []);
+  
 
-  return (
+  return creationActive ? (
     <div>
       <CreatePlan />
+    </div>
+  ) : editingActive ? (
+    <div>
+      <EditPlan />
+    </div>
+  ) : (
+    <div>
       <Listing
         listInfo={plansInfo}
         itemsData={plans}
@@ -34,6 +49,10 @@ export default function PlansListing() {
         fetchAction={nextPlansFetched}
         path="app/plan/"
       />
+
+      <button onClick={() => dispach(planCreationStatusChanged(true))}>
+        Stwórz plan
+      </button>
     </div>
   );
 }

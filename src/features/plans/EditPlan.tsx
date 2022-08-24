@@ -1,14 +1,21 @@
 import React, { useMemo, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../common/hooks";
 import { createPlan } from "./actions";
-import { planCreationStatusChanged } from "./planSlice";
+import { planEditionStatusChanged } from "./planSlice";
 
-export default function CreatePlan() {
-  const [name, setName] = useState("");
+export default function EditPlan() {
+  const editingPlanId = useAppSelector(
+    (state) => state.planSlice.editing_plan_id
+  );
+  const selectedPlan = useAppSelector((state) =>
+    state.planSlice.plans.find((plan) => plan.id == editingPlanId)
+  );
+  const [name, setName] = useState(selectedPlan?.name || "");
   const exercises = useAppSelector((state) => state.exercisesSlice.exercises);
-  const [selectedModules, setSelectedModules] = useState<number[]>([]);
-  const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>([]);
-  const [cycle, setCycle] = useState<number | null>(null);
+  const [selectedModules, setSelectedModules] = useState<number[]>(
+    selectedPlan?.modules.map((module) => module.id) || []
+  );
+  const [cycle, setCycle] = useState<number | null>(selectedPlan?.cycle || 0);
   const avaliableModules = useAppSelector(
     (state) => state.trainModuleSlice.train_modules
   );
@@ -28,8 +35,8 @@ export default function CreatePlan() {
       })),
     [avaliableMuscleParts, exercises, avaliableModules]
   );
+  const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>([]);
   const dispach = useAppDispatch();
-
   function submitPlan(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (name === "") {
@@ -59,13 +66,11 @@ export default function CreatePlan() {
   function addModule() {
     setSelectedMuscleParts([...selectedMuscleParts, 0]);
     setSelectedModules([...selectedModules, 0]);
-    console.log(selectedModules);
   }
 
   function deleteModule(index: number) {
     setSelectedMuscleParts(selectedMuscleParts.filter((val, i) => i !== index));
     setSelectedModules(selectedModules.filter((val, i) => i !== index));
-    console.log(selectedModules.filter((val, i) => i !== index));
   }
 
   return (
@@ -86,7 +91,7 @@ export default function CreatePlan() {
             />
           </div>
 
-          {selectedModules.map((id: Number, index: number) => (
+          {selectedModules.map((id: number, index: number) => (
             <div key={index}>
               <select
                 name=""
@@ -141,11 +146,12 @@ export default function CreatePlan() {
           <button type="button" onClick={() => addModule()}>
             Dodaj moduł
           </button>
+
           <input type="submit" value="Stwórz plan" />
         </div>
       </form>
 
-      <button onClick={() => dispach(planCreationStatusChanged(false))}>
+      <button onClick={() => dispach(planEditionStatusChanged(0))}>
         Wyjdź
       </button>
     </div>
