@@ -10,32 +10,27 @@ export default function EditPlan() {
   const selectedPlan = useAppSelector((state) =>
     state.planSlice.plans.find((plan) => plan.id == editingPlanId)
   );
-  const [name, setName] = useState(selectedPlan?.name || "");
-  const exercises = useAppSelector((state) => state.exercisesSlice.exercises);
+  const [name, setName] = useState(selectedPlan!.name);
   const [selectedModules, setSelectedModules] = useState<number[]>(
-    selectedPlan?.modules.map((module) => module.id) || []
+    selectedPlan!.modules.map((module) => module.id)
   );
-  const [cycle, setCycle] = useState<number | null>(selectedPlan?.cycle || 0);
+  const [cycle, setCycle] = useState<number | null>(selectedPlan!.cycle);
   const avaliableModules = useAppSelector(
     (state) => state.trainModuleSlice.train_modules
   );
   const avaliableMuscleParts = useAppSelector(
     (state) => state.musclePartsSlice.muscles_parts
   );
-  const modulesPerMuscleParts = useMemo(
-    () =>
-      avaliableMuscleParts.map((muslcePart) => ({
-        musclePart: muslcePart,
-        modules: avaliableModules.filter((module) =>
-          exercises
-            .filter((exercise) => exercise.muscle_part === muslcePart.id)
-            .map((ex) => ex.id)
-            .includes(module.exercise)
-        ),
-      })),
-    [avaliableMuscleParts, exercises, avaliableModules]
+  const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>(
+    () => selectedPlan!.modules.map((module) => {
+      let x = avaliableModules.find((mod) => mod.id === module.id);
+      let y = avaliableMuscleParts.find((muscle) => muscle.id === x!.muscle_part_id);
+        if (y) {
+            return y.id
+        }
+        return 0
+    })
   );
-  const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>([]);
   const dispach = useAppDispatch();
   function submitPlan(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -79,7 +74,11 @@ export default function EditPlan() {
         <div>
           <div>
             Nazwa
-            <input type="text" onChange={(e) => setName(e.target.value)} />
+            <input
+              type="text"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+            />
           </div>
           <div>
             Number cyklu
@@ -88,6 +87,7 @@ export default function EditPlan() {
               name=""
               id=""
               onChange={(e) => setCycle(Number(e.target.value))}
+              value={cycle === null ? 0 : cycle}
             />
           </div>
 
@@ -128,12 +128,11 @@ export default function EditPlan() {
                 value={selectedModules[index]}
               >
                 <option value={0}></option>
-                {modulesPerMuscleParts
-                  .find(
-                    (value) =>
-                      value.musclePart.id === selectedMuscleParts[index]
+                {avaliableModules
+                  .filter(
+                    (mod) => mod.muscle_part_id === selectedMuscleParts[index]
                   )
-                  ?.modules.map((module, i) => (
+                  .map((module, i) => (
                     <option value={module.id} key={i}>
                       {module.name}
                     </option>

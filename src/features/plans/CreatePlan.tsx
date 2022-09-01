@@ -5,7 +5,6 @@ import { planCreationStatusChanged } from "./planSlice";
 
 export default function CreatePlan() {
   const [name, setName] = useState("");
-  const exercises = useAppSelector((state) => state.exercisesSlice.exercises);
   const [selectedModules, setSelectedModules] = useState<number[]>([]);
   const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>([]);
   const [cycle, setCycle] = useState<number | null>(null);
@@ -14,19 +13,6 @@ export default function CreatePlan() {
   );
   const avaliableMuscleParts = useAppSelector(
     (state) => state.musclePartsSlice.muscles_parts
-  );
-  const modulesPerMuscleParts = useMemo(
-    () =>
-      avaliableMuscleParts.map((muslcePart) => ({
-        musclePart: muslcePart,
-        modules: avaliableModules.filter((module) =>
-          exercises
-            .filter((exercise) => exercise.muscle_part === muslcePart.id)
-            .map((ex) => ex.id)
-            .includes(module.exercise)
-        ),
-      })),
-    [avaliableMuscleParts, exercises, avaliableModules]
   );
   const dispach = useAppDispatch();
 
@@ -59,13 +45,11 @@ export default function CreatePlan() {
   function addModule() {
     setSelectedMuscleParts([...selectedMuscleParts, 0]);
     setSelectedModules([...selectedModules, 0]);
-    console.log(selectedModules);
   }
 
   function deleteModule(index: number) {
     setSelectedMuscleParts(selectedMuscleParts.filter((val, i) => i !== index));
     setSelectedModules(selectedModules.filter((val, i) => i !== index));
-    console.log(selectedModules.filter((val, i) => i !== index));
   }
 
   return (
@@ -123,12 +107,11 @@ export default function CreatePlan() {
                 value={selectedModules[index]}
               >
                 <option value={0}></option>
-                {modulesPerMuscleParts
-                  .find(
-                    (value) =>
-                      value.musclePart.id === selectedMuscleParts[index]
+                {avaliableModules
+                  .filter(
+                    (mod) => mod.muscle_part_id === selectedMuscleParts[index]
                   )
-                  ?.modules.map((module, i) => (
+                  .map((module, i) => (
                     <option value={module.id} key={i}>
                       {module.name}
                     </option>

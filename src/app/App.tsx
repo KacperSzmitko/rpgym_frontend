@@ -5,6 +5,7 @@ import LoginPage from "../features/auth/LoginPage";
 import MuscleLevels from "../features/muscleLevels/MuscleLevels";
 import ModulesListing from "../features/trainModules/ModulesPage";
 import PlansListing from "../features/plans/PlansPage";
+import TrainStart from "../features/trainStart/TrainStart";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             element={
               <div>
                 <MuscleLevels />
+                <TrainStart />
               </div>
             }
           ></Route>

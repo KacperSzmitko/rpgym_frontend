@@ -5,6 +5,7 @@ import muscleLevelsSlice from "../features/muscleLevels/muscleLevelsSlice";
 import planSlice from "../features/plans/planSlice";
 import trainModuleSlice from "../features/trainModules/trainModuleSlice";
 import userInfoSlice from "../features/userInfo/userInfoSlice";
+import trainStartSlice from "../features/trainStart/trainStartSlice";
 
 export default combineReducers({
   musclePartsSlice,
@@ -13,4 +14,5 @@ export default combineReducers({
   planSlice,
   trainModuleSlice,
   userInfoSlice,
+  trainStartSlice,
 });

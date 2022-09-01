@@ -43,6 +43,14 @@ const counterSlice = createSlice({
       state.plans = [action.payload, ...state.plans];
       state.plans_info.count += 1;
     },
+    allPlansFetched(state: PlansType, action: PayloadAction<PlanType[]>) {
+      state.plans = action.payload;
+      state.plans_info.count = action.payload.length;
+      state.plans_info.last_cached_page = Number(
+        (action.payload.length / state.plans_info.items_per_page).toFixed(0)
+      );
+      state.plans_info.next = null;
+    },
     nextPlansFetched(state: PlansType, action: PayloadAction<PlanListing>) {
       state.plans = [
         ...state.plans,
@@ -86,6 +94,7 @@ const counterSlice = createSlice({
 });
 
 export const {
+  allPlansFetched,
   planCreated,
   nextPlansFetched,
   planDeleted,
