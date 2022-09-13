@@ -1,18 +1,18 @@
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { getMuscleLevels } from "./actions";
-import MuscleLevel from "./MuscleLevel";
-import { MuscleLevelType } from "./muscleLevelsSlice";
+import React, { useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
+import { getMuscleLevels } from './actions'
+import MuscleLevel from './MuscleLevel'
+import { MuscleLevelType } from './muscleLevelsSlice'
 
-export default function MuscleLevels() {
-  const dispach = useAppDispatch();
-  const muscleLevels = useAppSelector((state) => state.muscleLevelsSlice.muscles_levels);
+export default function MuscleLevels () {
+  const dispach = useAppDispatch()
+  const muscleLevels = useAppSelector((state) => state.muscleLevelsSlice.muscles_levels)
 
   useEffect(() => {
     if (muscleLevels.length === 0) {
-      dispach(getMuscleLevels());
+      dispach(getMuscleLevels())
     }
-  }, []);
+  }, [])
 
   return (
     <div>
@@ -20,5 +20,5 @@ export default function MuscleLevels() {
         <MuscleLevel muscle={muslce} key={index} />
       ))}
     </div>
-  );
+  )
 }

@@ -1,14 +1,13 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import HomePage from "../common/HomePage";
-import LoginPage from "../features/auth/LoginPage";
-import MuscleLevels from "../features/muscleLevels/MuscleLevels";
-import ModulesListing from "../features/trainModules/ModulesPage";
-import PlansListing from "../features/plans/PlansPage";
-import TrainStart from "../features/trainStart/TrainStart";
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import HomePage from '../common/HomePage'
+import LoginPage from '../features/auth/LoginPage'
+import MuscleLevels from '../features/muscleLevels/MuscleLevels'
+import ModulesListing from '../features/trainModules/ModulesPage'
+import PlansListing from '../features/plans/PlansPage'
+import TrainStart from '../features/trainStart/TrainStart'
 
-
-function App() {
+function App () {
   return (
     <div className="app" id="main_window">
       <Routes>
@@ -43,7 +42,7 @@ function App() {
         <Route path="login" element={<LoginPage />}></Route>
       </Routes>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

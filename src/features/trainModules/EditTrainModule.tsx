@@ -1,84 +1,72 @@
-import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { ExcerciseType } from "../exercises/exercisesSlice";
-import { MusclePartType } from "../muscleParts/musclePartsSlice";
-import { updateListItem } from "../../common/actions";
-import { moduleEdited, moduleEditionStatusChanged } from "./trainModuleSlice";
+import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
+import { ExcerciseType } from '../exercises/exercisesSlice'
+import { MusclePartType } from '../muscleParts/musclePartsSlice'
+import { updateListItem } from '../../common/actions'
+import { moduleEdited, moduleEditionStatusChanged } from './trainModuleSlice'
 
-export default function EditTrainModule() {
-  const dispach = useAppDispatch();
+export default function EditTrainModule () {
+  const dispach = useAppDispatch()
 
-  const musclesParts = useAppSelector(
-    (state) => state.musclePartsSlice.muscles_parts
-  );
-  const editingModuleId = useAppSelector(
-    (state) => state.trainModuleSlice.editing_module_id
-  );
+  const musclesParts = useAppSelector((state) => state.musclePartsSlice.muscles_parts)
+  const editingModuleId = useAppSelector((state) => state.trainModuleSlice.editing_module_id)
 
   const selectedModule = useAppSelector((state) =>
-    state.trainModuleSlice.train_modules.find(
-      (module) => module.id === editingModuleId
-    )
-  );
+    state.trainModuleSlice.train_modules.find((module) => module.id === editingModuleId)
+  )
 
-  const [selectedExerciseId, setSelectedExerciseId] = useState(
-    () => selectedModule!.exercise
-  );
+  const [selectedExerciseId, setSelectedExerciseId] = useState(() => selectedModule!.exercise)
   const selectedExercise = useAppSelector((state) =>
-    state.exercisesSlice.exercises.find(
-      (exercise) => exercise.id === selectedExerciseId
-    )
-  );
+    state.exercisesSlice.exercises.find((exercise) => exercise.id === selectedExerciseId)
+  )
   const [selectedMuscleId, setselectedMuscleId] = useState(
-    () =>
-      musclesParts.find((muslce) => muslce.id === selectedExercise!.muscle_part)
-        ?.id
-  );
+    () => musclesParts.find((muslce) => muslce.id === selectedExercise!.muscle_part)?.id
+  )
   const exercises = useAppSelector((state) =>
     state.exercisesSlice.exercises.filter(
       (exercise: ExcerciseType) => exercise.muscle_part === selectedMuscleId
     )
-  );
+  )
 
-  const [name, setName] = useState(() => selectedModule?.name || "");
-  const [series, setSeries] = useState(() => selectedModule?.series || 0);
-  const [weight, setWeight] = useState(() => selectedModule?.weight || 0);
+  const [name, setName] = useState(() => selectedModule?.name ?? '')
+  const [series, setSeries] = useState(() => selectedModule?.series ?? 0)
+  const [weight, setWeight] = useState(() => selectedModule?.weight ?? 0)
   const [levelWeightInc, setLevelWeightInc] = useState(
-    () => selectedModule?.level_weight_increase || 0.0
-  );
-  const [reps, setReps] = useState<number[]>(() => selectedModule?.reps || []);
+    () => selectedModule?.level_weight_increase ?? 0.0
+  )
+  const [reps, setReps] = useState<number[]>(() => ((selectedModule!.reps) != null) ? selectedModule!.reps : [])
 
-  function parseReps(e: React.ChangeEvent<HTMLInputElement>) {
-    setReps(e.target.value.split(",").map((rep) => Number(rep)));
+  function parseReps (e: React.ChangeEvent<HTMLInputElement>) {
+    setReps(e.target.value.split(',').map((rep) => Number(rep)))
   }
 
-  function editModule(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (name === "") {
-      return;
+  function editModule (e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (name === '') {
+      return
     }
     if (series === 0) {
-      return;
+      return
     }
     if (weight === 0) {
-      return;
+      return
     }
     if (levelWeightInc === 0) {
-      return;
+      return
     }
     if (reps.length === 0) {
-      return;
+      return
     }
     dispach(
       updateListItem(`app/train_module/${editingModuleId}/`, moduleEdited, {
-        name: name,
+        name,
         exercise: selectedExerciseId,
-        series: series,
-        weight: weight,
+        series,
+        weight,
         level_weight_increase: levelWeightInc,
-        reps: reps,
+        reps
       })
-    );
+    )
   }
 
   return (
@@ -89,15 +77,11 @@ export default function EditTrainModule() {
             name=""
             id=""
             onChange={(e) => setselectedMuscleId(Number(e.target.value))}
-            defaultValue={selectedMuscleId}
-          >
+            defaultValue={selectedMuscleId}>
             <option value={0}></option>
             <option value={selectedMuscleId}>
-              {" "}
-              {
-                musclesParts.find((muscle) => muscle.id === selectedMuscleId)
-                  ?.name
-              }
+              {' '}
+              {musclesParts.find((muscle) => muscle.id === selectedMuscleId)?.name}
             </option>
             {musclesParts
               .filter((muscle) => muscle.id !== selectedMuscleId)
@@ -114,12 +98,9 @@ export default function EditTrainModule() {
             id=""
             disabled={selectedMuscleId === 0}
             onChange={(e) => setSelectedExerciseId(Number(e.target.value))}
-            defaultValue={selectedModule!.exercise}
-          >
+            defaultValue={selectedModule!.exercise}>
             <option value={0}></option>
-            <option value={selectedModule!.exercise}>
-              {selectedExercise?.name}
-            </option>
+            <option value={selectedModule!.exercise}>{selectedExercise?.name}</option>
             {exercises
               .filter((exercise) => exercise.id !== selectedModule?.exercise)
               .map((exercise: ExcerciseType, index: number) => (
@@ -181,9 +162,7 @@ export default function EditTrainModule() {
         </div>
         <input type="submit" value="Zapisz" />
       </form>
-      <button onClick={() => dispach(moduleEditionStatusChanged(0))}>
-        Wyjdź
-      </button>
+      <button onClick={() => dispach(moduleEditionStatusChanged(0))}>Wyjdź</button>
     </div>
-  );
+  )
 }

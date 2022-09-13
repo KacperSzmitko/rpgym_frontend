@@ -1,59 +1,59 @@
-import React, { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { ExcerciseType } from "../exercises/exercisesSlice";
-import { MusclePartType } from "../muscleParts/musclePartsSlice";
-import { createListItem } from "../../common/actions";
-import { moduleCreated, moduleCreationStatusChanged } from "./trainModuleSlice";
+import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
+import { ExcerciseType } from '../exercises/exercisesSlice'
+import { MusclePartType } from '../muscleParts/musclePartsSlice'
+import { createListItem } from '../../common/actions'
+import { moduleCreated, moduleCreationStatusChanged } from './trainModuleSlice'
 
-export default function CreateTrainModule() {
-  const dispach = useAppDispatch();
+export default function CreateTrainModule () {
+  const dispach = useAppDispatch()
   const musclesParts = useAppSelector(
     (state) => state.musclePartsSlice.muscles_parts
-  );
-  const [selectedMuscleId, setselectedMuscleId] = useState(0);
+  )
+  const [selectedMuscleId, setselectedMuscleId] = useState(0)
   const exercises = useAppSelector((state) =>
     state.exercisesSlice.exercises.filter(
       (exercise: ExcerciseType) => exercise.muscle_part === selectedMuscleId
     )
-  );
-  const [selectedExerciseId, setselectedExerciseId] = useState(0);
-  const [name, setName] = useState("");
-  const [series, setSeries] = useState(0);
-  const [weight, setWeight] = useState(0);
-  const [levelWeightInc, setLevelWeightInc] = useState(0.0);
-  const [reps, setReps] = useState<Number[]>([]);
+  )
+  const [selectedExerciseId, setselectedExerciseId] = useState(0)
+  const [name, setName] = useState('')
+  const [series, setSeries] = useState(0)
+  const [weight, setWeight] = useState(0)
+  const [levelWeightInc, setLevelWeightInc] = useState(0.0)
+  const [reps, setReps] = useState<Number[]>([])
 
-  function parseReps(e: React.ChangeEvent<HTMLInputElement>) {
-    setReps(e.target.value.split(",").map((rep) => Number(rep)));
+  function parseReps (e: React.ChangeEvent<HTMLInputElement>) {
+    setReps(e.target.value.split(',').map((rep) => Number(rep)))
   }
 
-  function createModule(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (name === "") {
-      return;
+  function createModule (e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (name === '') {
+      return
     }
     if (series === 0) {
-      return;
+      return
     }
     if (weight === 0) {
-      return;
+      return
     }
     if (levelWeightInc === 0) {
-      return;
+      return
     }
     if (reps.length === 0) {
-      return;
+      return
     }
     dispach(
-      createListItem("app/train_module/", moduleCreated, {
-        name: name,
+      createListItem('app/train_module/', moduleCreated, {
+        name,
         exercise: selectedExerciseId,
-        series: series,
-        weight: weight,
+        series,
+        weight,
         level_weight_increase: levelWeightInc,
-        reps: reps,
+        reps
       })
-    );
+    )
   }
 
   return (
@@ -134,5 +134,5 @@ export default function CreateTrainModule() {
         Wyjdź
       </button>
     </div>
-  );
+  )
 }

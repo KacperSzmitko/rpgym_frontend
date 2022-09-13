@@ -1,71 +1,73 @@
-import React, { useMemo, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { createPlan } from "./actions";
-import { planEditionStatusChanged } from "./planSlice";
+import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
+import { planEditionStatusChanged, planEdited } from './planSlice'
+import { updateListItem } from '../../common/actions'
 
-export default function EditPlan() {
+export default function EditPlan () {
   const editingPlanId = useAppSelector(
     (state) => state.planSlice.editing_plan_id
-  );
+  )
   const selectedPlan = useAppSelector((state) =>
-    state.planSlice.plans.find((plan) => plan.id == editingPlanId)
-  );
-  const [name, setName] = useState(selectedPlan!.name);
+    state.planSlice.plans.find((plan) => plan.id === editingPlanId)
+  )
+  const [name, setName] = useState(selectedPlan!.name)
   const [selectedModules, setSelectedModules] = useState<number[]>(
     selectedPlan!.modules.map((module) => module.id)
-  );
-  const [cycle, setCycle] = useState<number | null>(selectedPlan!.cycle);
+  )
+  const [cycle, setCycle] = useState<number | null>(selectedPlan!.cycle)
   const avaliableModules = useAppSelector(
     (state) => state.trainModuleSlice.train_modules
-  );
+  )
   const avaliableMuscleParts = useAppSelector(
     (state) => state.musclePartsSlice.muscles_parts
-  );
+  )
   const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>(
     () => selectedPlan!.modules.map((module) => {
-      let x = avaliableModules.find((mod) => mod.id === module.id);
-      let y = avaliableMuscleParts.find((muscle) => muscle.id === x!.muscle_part_id);
-        if (y) {
-            return y.id
-        }
-        return 0
+      const x = avaliableModules.find((mod) => mod.id === module.id)
+      const y = avaliableMuscleParts.find((muscle) => muscle.id === x!.muscle_part_id)
+      if (y != null) {
+        return y.id
+      }
+      return 0
     })
-  );
-  const dispach = useAppDispatch();
-  function submitPlan(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (name === "") {
-      return;
+  )
+  const dispach = useAppDispatch()
+  function submitPlan (e: React.FormEvent<HTMLFormElement>): void {
+    e.preventDefault()
+    if (name === '') {
+      return
     }
-    let modulesToCreate: number[] = [];
+    const modulesToCreate: number[] = []
     if (selectedModules.length === 0) {
-      return;
+      return
     } else {
       for (let i = 0; i < selectedMuscleParts.length; i++) {
         if (selectedMuscleParts[i] !== 0 && selectedModules[i] === 0) {
-          return;
+          return
         }
         if (selectedMuscleParts[i] === 0 && selectedModules[i] === 0) {
-          continue;
+          continue
         }
         if (selectedMuscleParts[i] === 0 && selectedModules[i] !== 0) {
-          continue;
+          continue
         }
-        modulesToCreate.push(selectedModules[i]);
+        modulesToCreate.push(selectedModules[i])
       }
     }
-    let data = { name: name, modules: modulesToCreate, cycle: cycle };
-    dispach(createPlan(data));
+    const cycleVal = cycle === null ? null : cycle > 0 ? cycle : null
+    const data = { name, modules: modulesToCreate, cycle: cycleVal }
+    console.log(data)
+    dispach(updateListItem(`app/plan/${editingPlanId}/`, planEdited, data))
   }
 
-  function addModule() {
-    setSelectedMuscleParts([...selectedMuscleParts, 0]);
-    setSelectedModules([...selectedModules, 0]);
+  function addModule (): void {
+    setSelectedMuscleParts([...selectedMuscleParts, 0])
+    setSelectedModules([...selectedModules, 0])
   }
 
-  function deleteModule(index: number) {
-    setSelectedMuscleParts(selectedMuscleParts.filter((val, i) => i !== index));
-    setSelectedModules(selectedModules.filter((val, i) => i !== index));
+  function deleteModule (index: number): void {
+    setSelectedMuscleParts(selectedMuscleParts.filter((val, i) => i !== index))
+    setSelectedModules(selectedModules.filter((val, i) => i !== index))
   }
 
   return (
@@ -101,14 +103,14 @@ export default function EditPlan() {
                     selectedMuscleParts.map((oldMusclePart, i) =>
                       i === index ? Number(e.target.value) : oldMusclePart
                     )
-                  );
+                  )
                 }}
                 value={selectedMuscleParts[index]}
               >
                 <option value={0}></option>
                 {avaliableMuscleParts.map((muscle, index) => (
                   <option key={index} value={muscle.id}>
-                    {" "}
+                    {' '}
                     {muscle.name}
                   </option>
                 ))}
@@ -123,7 +125,7 @@ export default function EditPlan() {
                     selectedModules.map((value, i) =>
                       i === index ? Number(e.target.value) : value
                     )
-                  );
+                  )
                 }}
                 value={selectedModules[index]}
               >
@@ -138,7 +140,9 @@ export default function EditPlan() {
                     </option>
                   ))}
               </select>
-              <button onClick={() => deleteModule(index)}>Usuń</button>
+              <button onClick={() => deleteModule(index)} type="button">
+                Usuń
+              </button>
             </div>
           ))}
 
@@ -146,13 +150,16 @@ export default function EditPlan() {
             Dodaj moduł
           </button>
 
-          <input type="submit" value="Stwórz plan" />
+          <input type="submit" value="Zapisz" />
         </div>
       </form>
 
-      <button onClick={() => dispach(planEditionStatusChanged(0))}>
+      <button
+        onClick={() => dispach(planEditionStatusChanged(0))}
+        type="button"
+      >
         Wyjdź
       </button>
     </div>
-  );
+  )
 }

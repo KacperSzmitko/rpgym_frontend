@@ -1,55 +1,55 @@
-import React, { useMemo, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { createPlan } from "./actions";
-import { planCreationStatusChanged } from "./planSlice";
+import React, { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
+import { createPlan } from './actions'
+import { planCreationStatusChanged } from './planSlice'
 
-export default function CreatePlan() {
-  const [name, setName] = useState("");
-  const [selectedModules, setSelectedModules] = useState<number[]>([]);
-  const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>([]);
-  const [cycle, setCycle] = useState<number | null>(null);
+export default function CreatePlan () {
+  const [name, setName] = useState('')
+  const [selectedModules, setSelectedModules] = useState<number[]>([])
+  const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>([])
+  const [cycle, setCycle] = useState<number | null>(null)
   const avaliableModules = useAppSelector(
     (state) => state.trainModuleSlice.train_modules
-  );
+  )
   const avaliableMuscleParts = useAppSelector(
     (state) => state.musclePartsSlice.muscles_parts
-  );
-  const dispach = useAppDispatch();
+  )
+  const dispach = useAppDispatch()
 
-  function submitPlan(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (name === "") {
-      return;
+  function submitPlan (e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (name === '') {
+      return
     }
-    let modulesToCreate: number[] = [];
+    const modulesToCreate: number[] = []
     if (selectedModules.length === 0) {
-      return;
+      return
     } else {
       for (let i = 0; i < selectedMuscleParts.length; i++) {
         if (selectedMuscleParts[i] !== 0 && selectedModules[i] === 0) {
-          return;
+          return
         }
         if (selectedMuscleParts[i] === 0 && selectedModules[i] === 0) {
-          continue;
+          continue
         }
         if (selectedMuscleParts[i] === 0 && selectedModules[i] !== 0) {
-          continue;
+          continue
         }
-        modulesToCreate.push(selectedModules[i]);
+        modulesToCreate.push(selectedModules[i])
       }
     }
-    let data = { name: name, modules: modulesToCreate, cycle: cycle };
-    dispach(createPlan(data));
+    const data = { name, modules: modulesToCreate, cycle }
+    dispach(createPlan(data))
   }
 
-  function addModule() {
-    setSelectedMuscleParts([...selectedMuscleParts, 0]);
-    setSelectedModules([...selectedModules, 0]);
+  function addModule () {
+    setSelectedMuscleParts([...selectedMuscleParts, 0])
+    setSelectedModules([...selectedModules, 0])
   }
 
-  function deleteModule(index: number) {
-    setSelectedMuscleParts(selectedMuscleParts.filter((val, i) => i !== index));
-    setSelectedModules(selectedModules.filter((val, i) => i !== index));
+  function deleteModule (index: number) {
+    setSelectedMuscleParts(selectedMuscleParts.filter((val, i) => i !== index))
+    setSelectedModules(selectedModules.filter((val, i) => i !== index))
   }
 
   return (
@@ -80,14 +80,14 @@ export default function CreatePlan() {
                     selectedMuscleParts.map((oldMusclePart, i) =>
                       i === index ? Number(e.target.value) : oldMusclePart
                     )
-                  );
+                  )
                 }}
                 value={selectedMuscleParts[index]}
               >
                 <option value={0}></option>
                 {avaliableMuscleParts.map((muscle, index) => (
                   <option key={index} value={muscle.id}>
-                    {" "}
+                    {' '}
                     {muscle.name}
                   </option>
                 ))}
@@ -102,7 +102,7 @@ export default function CreatePlan() {
                     selectedModules.map((value, i) =>
                       i === index ? Number(e.target.value) : value
                     )
-                  );
+                  )
                 }}
                 value={selectedModules[index]}
               >
@@ -132,5 +132,5 @@ export default function CreatePlan() {
         Wyjdź
       </button>
     </div>
-  );
+  )
 }

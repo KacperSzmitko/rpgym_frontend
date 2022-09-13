@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { login } from "./authActions";
-import { useAppDispatch } from "../../common/hooks";
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { login } from './authActions'
+import { useAppDispatch } from '../../common/hooks'
 
-export default function LoginForm() {
-  const [email, setEmail] = useState("kacper@wp.pl");
-  const [password, setPassword] = useState("Test1234!");
-  const dispach = useAppDispatch();
-  const navigate = useNavigate();
+export default function LoginForm () {
+  const [email, setEmail] = useState('kacper@wp.pl')
+  const [password, setPassword] = useState('Test1234!')
+  const dispach = useAppDispatch()
+  const navigate = useNavigate()
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    let response = await dispach(login(email, password));
-    if (response.status === 200) navigate("/");
+  async function onSubmit (e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const response = await dispach(login(email, password))
+    if (response.status === 200) navigate('/')
     else {
-      console.log("Niezalogowano");
+      console.log('Niezalogowano')
     }
   }
 
@@ -41,5 +41,5 @@ export default function LoginForm() {
         <input type="submit" value="Zaloguj" />
       </form>
     </div>
-  );
+  )
 }

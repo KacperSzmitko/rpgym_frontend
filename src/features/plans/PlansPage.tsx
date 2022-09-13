@@ -1,46 +1,49 @@
-import React, { useEffect } from "react";
-import { useAppSelector } from "../../common/hooks";
-import Listing from "../../common/Listing";
-import CreatePlan from "./CreatePlan";
-import PlanItem from "./PlanItem";
-import { useAppDispatch } from "../../common/hooks";
-import { getAllModules } from "../trainModules/actions";
-import { nextPlansFetched, planCreationStatusChanged } from "./planSlice";
-import EditPlan from "./EditPlan";
+import React, { useEffect } from 'react'
+import { useAppSelector, useAppDispatch } from '../../common/hooks'
+import Listing from '../../common/Listing'
+import CreatePlan from './CreatePlan'
+import PlanItem from './PlanItem'
 
-export default function PlansListing() {
-  const plansInfo = useAppSelector((state) => state.planSlice.plans_info);
-  const plans = useAppSelector((state) => state.planSlice.plans);
+import { getAllModules } from '../trainModules/actions'
+import { nextPlansFetched, planCreationStatusChanged } from './planSlice'
+import EditPlan from './EditPlan'
+
+export default function PlansListing () {
+  const plansInfo = useAppSelector((state) => state.planSlice.plans_info)
+  const plans = useAppSelector((state) => state.planSlice.plans)
   const modules = useAppSelector(
     (state) => state.trainModuleSlice.train_modules
-  );
+  )
   const modulesInfo = useAppSelector(
     (state) => state.trainModuleSlice.train_modules_info
-  );
+  )
   const editingActive = useAppSelector(
     (state) => state.planSlice.editing_plan_id !== 0
-  );
+  )
   const creationActive = useAppSelector(
     (state) => state.planSlice.plan_creation_active
-  );
-  const dispach = useAppDispatch();
+  )
+  const dispach = useAppDispatch()
 
   useEffect(() => {
     if (modules.length < modulesInfo.count || modulesInfo.count === -1) {
-      dispach(getAllModules());
+      dispach(getAllModules())
     }
-  }, []);
-  
+  }, [])
 
-  return creationActive ? (
+  return creationActive
+    ? (
     <div>
       <CreatePlan />
     </div>
-  ) : editingActive ? (
+      )
+    : editingActive
+      ? (
     <div>
       <EditPlan />
     </div>
-  ) : (
+        )
+      : (
     <div>
       <Listing
         listInfo={plansInfo}
@@ -54,5 +57,5 @@ export default function PlansListing() {
         Stwórz plan
       </button>
     </div>
-  );
+        )
 }

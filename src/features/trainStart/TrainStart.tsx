@@ -1,21 +1,29 @@
-import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import { getCurrentPlanOrAll } from "./actions";
+import React, { useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
+import { getCurrentPlanAndAll, startTrain } from '../userInfo/actions'
 
-function TrainStart() {
+function TrainStart () {
   const currentPlan = useAppSelector(
-    (state) => state.trainStartSlice.currentPlan
-  );
-  const dispach = useAppDispatch();
+    (state) => state.userInfoSlice.currentPlan
+  )
+  const plans = useAppSelector((state) => state.planSlice.plans)
+  const dispach = useAppDispatch()
+  const [selectedPlan, setSelectedPlan] = useState(() => currentPlan === null ? (plans.length > 0 ? plans[0].id : 0) : currentPlan.id)
 
   useEffect(() => {
-    if (currentPlan === null) dispach(getCurrentPlanOrAll());
-  }, []);
+    dispach(getCurrentPlanAndAll())
+  }, [])
 
-  return currentPlan === null ? (
-    <div>Wybierz trening</div>
-  ) : (
-    <div>Rozpocznij trening</div>
-  );
+  return (
+    <div>
+      <select name="" id="" defaultValue={selectedPlan} onChange={(e) => setSelectedPlan(Number(e.target.value))} disabled={plans.length < 0}>
+        {plans.map((plan, index) => (
+          <option value={plan.id} key={index}>{plan.name}</option>
+        ))}
+      </select>
+      <button onClick={() => { dispach(startTrain(selectedPlan)) }} disabled={selectedPlan === 0}>Rozpocznij trening</button>
+    </div>
+  )
 }
-export default TrainStart;
+
+export default TrainStart

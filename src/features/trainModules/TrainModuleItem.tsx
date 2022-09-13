@@ -1,26 +1,26 @@
-import React from "react";
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
+import React from 'react'
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
 import {
   nextModulePageSet,
   moduleDeleted,
   moduleCacheUpdated,
   TrainModuleType,
-  moduleEditionStatusChanged,
-} from "./trainModuleSlice";
-import { deleteListItem } from "../../common/actions";
+  moduleEditionStatusChanged
+} from './trainModuleSlice'
+import { deleteListItem } from '../../common/actions'
 
-export type PropsType = {
-  data: TrainModuleType;
-  next: string;
-};
+export interface PropsType {
+  data: TrainModuleType
+  next: string
+}
 
-export function TrainModule({ data, next }: PropsType) {
-  const dispach = useAppDispatch();
-  const exercise = useAppSelector((state) => state.exercisesSlice.exercises.find((exercise) => exercise.id === Number(data.exercise)));
-  const musclePart = useAppSelector((state) => state.musclePartsSlice.muscles_parts.find((musclePart) => musclePart.id === exercise?.muscle_part));
+export function TrainModule ({ data, next }: PropsType) {
+  const dispach = useAppDispatch()
+  const exercise = useAppSelector((state) => state.exercisesSlice.exercises.find((exercise) => exercise.id === Number(data.exercise)))
+  const musclePart = useAppSelector((state) => state.musclePartsSlice.muscles_parts.find((musclePart) => musclePart.id === exercise?.muscle_part))
   return (
-    <div id={`train_module_`}>
-      {data.name} {"  "}
+    <div id={'train_module_'}>
+      {data.name} {'  '}
       {data.current_level}
       {musclePart?.name}
       {data.level_weight_increase}
@@ -30,13 +30,13 @@ export function TrainModule({ data, next }: PropsType) {
       {data.series}
       {data.weight}
       <button
-        onClick={() =>
-          dispach(
+        onClick={async () =>
+          await dispach(
             deleteListItem(
               moduleDeleted,
               moduleCacheUpdated,
               nextModulePageSet,
-              "app/train_module",
+              'app/train_module',
               next,
               data.id
             )
@@ -49,8 +49,8 @@ export function TrainModule({ data, next }: PropsType) {
         Edytuj
       </button>
     </div>
-  );
+  )
 }
 
-const TrainModuleMemo = React.memo(TrainModule);
-export default TrainModuleMemo;
+const TrainModuleMemo = React.memo(TrainModule)
+export default TrainModuleMemo

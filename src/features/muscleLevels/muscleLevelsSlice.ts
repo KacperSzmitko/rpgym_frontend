@@ -1,30 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
+import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface MuscleLevelType {
-  muscle_name: string;
-  level: number;
-  progress: number;
+  muscle_name: string
+  level: number
+  progress: number
 }
 
 export interface MuscleLevelsType {
-  muscles_levels: MuscleLevelType[];
+  muscles_levels: MuscleLevelType[]
 }
 
-const initialState = { muscles_levels: [] } as MuscleLevelsType;
+const initialState = { muscles_levels: [] } as MuscleLevelsType
 
 const counterSlice = createSlice({
-  name: "muscleLevels",
+  name: 'muscleLevels',
   initialState,
   reducers: {
-    muscleLevelsFetched(
+    muscleLevelsFetched (
       state: MuscleLevelsType,
       action: PayloadAction<MuscleLevelType[]>
     ) {
-      state.muscles_levels = action.payload;
-    },
-  },
-});
+      state.muscles_levels = action.payload
+    }
+  }
+})
 
-export const { muscleLevelsFetched } = counterSlice.actions;
-export default counterSlice.reducer;
+export const { muscleLevelsFetched } = counterSlice.actions
+export default counterSlice.reducer

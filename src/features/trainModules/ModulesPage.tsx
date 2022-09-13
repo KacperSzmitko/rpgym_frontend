@@ -1,40 +1,43 @@
-import { useAppDispatch, useAppSelector } from "../../common/hooks";
-import Listing from "../../common/Listing";
-import TrainModuleMemo from "./TrainModuleItem";
-import CreateTrainModule from "./CreateTrainModule";
+import { useAppDispatch, useAppSelector } from '../../common/hooks'
+import Listing from '../../common/Listing'
+import TrainModuleMemo from './TrainModuleItem'
+import CreateTrainModule from './CreateTrainModule'
 import {
   moduleCreationStatusChanged,
-  nextModulesFetched,
-} from "./trainModuleSlice";
-import EditTrainModule from "./EditTrainModule";
+  nextModulesFetched
+} from './trainModuleSlice'
+import EditTrainModule from './EditTrainModule'
 
-export default function ModulesListing() {
+export default function ModulesListing () {
   const modulesInfo = useAppSelector(
     (state) => state.trainModuleSlice.train_modules_info
-  );
+  )
   const modules = useAppSelector(
     (state) => state.trainModuleSlice.train_modules
-  );
+  )
   const editingActive = useAppSelector(
     (state) => state.trainModuleSlice.editing_module_id !== 0
-  );
+  )
   const creationActive = useAppSelector(
     (state) => state.trainModuleSlice.module_creation_active
-  );
-  const dispach = useAppDispatch();
+  )
+  const dispach = useAppDispatch()
 
-
-  return creationActive ? (
+  return creationActive
+    ? (
     <div>
       <CreateTrainModule />
 
     </div>
-  ) : editingActive ? (
+      )
+    : editingActive
+      ? (
     <div>
       <EditTrainModule />
-      
+
     </div>
-  ) : (
+        )
+      : (
     <div>
       <Listing
         listInfo={modulesInfo}
@@ -43,7 +46,7 @@ export default function ModulesListing() {
         fetchAction={nextModulesFetched}
         path="app/train_module/"
       />
-      <button onClick={() =>dispach(moduleCreationStatusChanged(true))}>Stwórz moduł</button>
+      <button onClick={() => dispach(moduleCreationStatusChanged(true))}>Stwórz moduł</button>
     </div>
-  );
+        )
 }
