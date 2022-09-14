@@ -1,13 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { TrainModuleType } from '../trainModules/trainModuleSlice'
 import { ListingInfo } from '../../common/types'
+
+export interface TrainModuleType {
+  id: number
+  name: string
+}
+export interface TrainModulesType {
+  module: TrainModuleType
+  order_in_plan: number
+  done: boolean
+}
 
 export interface PlanType {
   id: number
   cycle: number | null
   name: string
-  modules: TrainModuleType[]
+  modules: TrainModulesType[]
+  started: boolean
 }
 
 export interface PlanListing {
@@ -23,7 +33,7 @@ export interface PlansType {
   plan_creation_active: boolean
 }
 
-const initialState = {
+const initialState: PlansType = {
   plans: [],
   plans_info: {
     next: null,
@@ -33,7 +43,7 @@ const initialState = {
   },
   editing_plan_id: 0,
   plan_creation_active: false
-} as PlansType
+}
 
 const counterSlice = createSlice({
   name: 'plans',

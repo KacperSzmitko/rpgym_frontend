@@ -12,7 +12,7 @@ export default function EditPlan () {
   )
   const [name, setName] = useState(selectedPlan!.name)
   const [selectedModules, setSelectedModules] = useState<number[]>(
-    selectedPlan!.modules.map((module) => module.id)
+    selectedPlan!.modules.map((m) => m.module.id)
   )
   const [cycle, setCycle] = useState<number | null>(selectedPlan!.cycle)
   const avaliableModules = useAppSelector(
@@ -22,8 +22,8 @@ export default function EditPlan () {
     (state) => state.musclePartsSlice.muscles_parts
   )
   const [selectedMuscleParts, setSelectedMuscleParts] = useState<number[]>(
-    () => selectedPlan!.modules.map((module) => {
-      const x = avaliableModules.find((mod) => mod.id === module.id)
+    () => selectedPlan!.modules.map((m) => {
+      const x = avaliableModules.find((mod) => mod.id === m.module.id)
       const y = avaliableMuscleParts.find((muscle) => muscle.id === x!.muscle_part_id)
       if (y != null) {
         return y.id

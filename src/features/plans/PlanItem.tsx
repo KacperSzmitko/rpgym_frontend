@@ -1,6 +1,5 @@
 import React from 'react'
-import { planEditionStatusChanged, PlanType, planDeleted, planCacheUpdated, nextPlanPageSet } from './planSlice'
-import { TrainModuleType } from '../trainModules/trainModuleSlice'
+import { planEditionStatusChanged, PlanType, planDeleted, planCacheUpdated, nextPlanPageSet, TrainModulesType } from './planSlice'
 
 import { useAppDispatch } from '../../common/hooks'
 import { deleteListItem } from '../../common/actions'
@@ -17,12 +16,12 @@ export function PlanItem ({ data, next }: PropsType) {
       {data.id}
       {data.name}
       {data.cycle}
-      {data.modules.map((val: TrainModuleType, index) => (
-        <div key={index}>{val.name}</div>
+      {data.modules.map((val: TrainModulesType, index) => (
+        <div key={index}>{val.module.name}</div>
       ))}
       <button
-        onClick={async () =>
-          await dispach(
+        onClick={() => {
+          dispach(
             deleteListItem(
               planDeleted,
               planCacheUpdated,
@@ -32,6 +31,7 @@ export function PlanItem ({ data, next }: PropsType) {
               data.id
             )
           )
+        }
         }
       >
         Usuń
